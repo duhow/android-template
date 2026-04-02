@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-  <a href="./actions/workflows/build.yml">
-    <img src="./actions/workflows/build.yml/badge.svg" alt="Build">
+  <a href="https://github.com/duhow/android-template/actions/workflows/build.yml">
+    <img src="https://github.com/duhow/android-template/actions/workflows/build.yml/badge.svg" alt="Build">
   </a>
   <img src="https://img.shields.io/badge/Android-8.0%2B-brightgreen?logo=android" alt="Android 8.0+">
   <img src="https://img.shields.io/badge/Kotlin-2.x-7F52FF?logo=kotlin" alt="Kotlin">
@@ -20,7 +20,7 @@
        alt="Get it on Obtainium" align="center" height="54" />
 </a>
 
-<a href="./releases/latest">
+<a href="https://github.com/duhow/android-template/releases/latest">
   <img src="https://raw.githubusercontent.com/Kunzisoft/Github-badge/4711835e032fe2735dc80c1329beb4685899aa91/get-it-on-github.png"
        alt="Download APK" align="center" height="81" />
 </a>
@@ -28,4 +28,6 @@
 
 ---
 
-Click the button. Setup. Code or ask to code. Do whatever you want.
+Click the button. [![Use this template](https://img.shields.io/badge/Use%20this%20template-green)](https://github.com/new?template_name=android-template&template_owner=duhow)
+
+Setup. Code or ask to code. Do whatever you want.

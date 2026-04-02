@@ -31,3 +31,19 @@
 Click the button. [![Use this template](https://img.shields.io/badge/Use%20this%20template-green)](https://github.com/new?template_name=android-template&template_owner=duhow)
 
 Setup. Code or ask to code. Do whatever you want.
+
+### Keystore
+
+To sign your APK, create a keystore. **Keep it safe**.
+
+```sh
+keytool -genkeypair -v -keystore release.jks -alias ${APP_NAME} -keyalg EC -groupname secp256r1 -sigalg SHA256withECDSA -validity 10000
+```
+
+You can upload it to GitHub Actions as Secret `ANDROID_KEYSTORE_BASE64` to generate Release APKs.
+
+```sh
+base64 -w 0 release.jks ; echo
+```
+
+Then define `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_PASSWORD` (default is the same), and `ANDROID_KEY_ALIAS` as configured.

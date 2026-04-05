@@ -8,14 +8,13 @@ Checks:
   - Bracket balance ( ) { } [ ] in Kotlin/Java source files
 
 Usage (standalone — exit code = number of failed checks):
-    python tools/lint.py [--max-warns N] [--pedantic] [--no-pytest]
+    python tools/lint.py [--max-warns N] [--no-pytest]
 
 Usage (via pytest — standard pytest exit codes):
     pytest tools/lint.py
 
 Options:
     --max-warns N   Allow up to N failures without exiting non-zero (for CI).
-    --pedantic      Strict mode: extra translation keys also count as errors.
     --no-pytest     Skip pytest even if available; use built-in runner.
 """
 from __future__ import annotations
@@ -102,7 +101,7 @@ def _check_xml_validity() -> list[str]:
     return issues
 
 
-def _check_language_parity(pedantic: bool = False) -> list[str]:
+def _check_language_parity() -> list[str]:
     issues: list[str] = []
     base = RES_DIR / "values" / "strings.xml"
     if not base.exists():
@@ -115,12 +114,11 @@ def _check_language_parity(pedantic: bool = False) -> list[str]:
             continue
         lang_names = _get_string_names(lang_file)
         missing = base_names - lang_names
+        extra = lang_names - base_names
         if missing:
             issues.append(f"{lang_dir.name}/strings.xml: missing keys {sorted(missing)}")
-        if pedantic:
-            extra = lang_names - base_names
-            if extra:
-                issues.append(f"{lang_dir.name}/strings.xml: extra keys {sorted(extra)}")
+        if extra:
+            issues.append(f"{lang_dir.name}/strings.xml: extra keys {sorted(extra)}")
     return issues
 
 
@@ -248,21 +246,21 @@ def test_bracket_balance() -> None:
 # ---------------------------------------------------------------------------
 
 _CHECKS: list[tuple[str, object]] = [
-    ("XML validity", lambda pedantic=False: _check_xml_validity()),
+    ("XML validity", _check_xml_validity),
     ("Language parity", _check_language_parity),
-    ("Language arrays", lambda pedantic=False: _check_language_arrays()),
-    ("Bracket balance", lambda pedantic=False: _check_bracket_balance()),
+    ("Language arrays", _check_language_arrays),
+    ("Bracket balance", _check_bracket_balance),
 ]
 
 
-def _run_standalone(max_warns: int = 0, pedantic: bool = False) -> int:
+def _run_standalone(max_warns: int = 0) -> int:
     sep = "=" * 60
     print(sep)
     print("Android Project Linter")
     print(sep)
     failures = 0
     for name, check_fn in _CHECKS:
-        issues = check_fn(pedantic)  # type: ignore[call-arg]
+        issues = check_fn()  # type: ignore[call-arg]
         if issues:
             failures += 1
             print(f"\nFAIL  {name}")
@@ -299,11 +297,6 @@ if __name__ == "__main__":
         help="Allow up to N check failures without exiting non-zero",
     )
     parser.add_argument(
-        "--pedantic",
-        action="store_true",
-        help="Strict mode: extra translation keys are also errors",
-    )
-    parser.add_argument(
         "--no-pytest",
         action="store_true",
         help="Skip pytest even if available; use built-in runner",
@@ -311,7 +304,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Delegate to pytest when available and no special exit-code flags are set
-    use_pytest = not args.no_pytest and args.max_warns == 0 and not args.pedantic
+    use_pytest = not args.no_pytest and args.max_warns == 0
     if use_pytest:
         try:
             import pytest  # type: ignore[import]
@@ -320,4 +313,4 @@ if __name__ == "__main__":
         except ImportError:
             pass
 
-    sys.exit(_run_standalone(max_warns=args.max_warns, pedantic=args.pedantic))
+    sys.exit(_run_standalone(max_warns=args.max_warns))

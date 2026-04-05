@@ -38,6 +38,27 @@ Check historic commits to avoid making up new scopes every time.
 - Keep entries concise and written from the user's perspective (e.g. `- Fixed crash when tapping a reset card`).
 - Numbered files are permanent per-version snapshots — do **not** edit a file once its release tag has been created.
 
+## Linting
+
+Run the linter as a final step before opening or merging a PR:
+
+```bash
+python tools/lint.py
+```
+
+The script checks:
+- **XML validity** — all resource XML files parse without error
+- **Language parity** — every locale `values-XX/strings.xml` contains the same keys as the base `values/strings.xml`
+- **Language arrays** — `language_codes` and `language_names` in `arrays.xml` have the same item count; non-default codes appear in `locale_config.xml`
+- **Bracket balance** — `()`, `{}`, `[]` are balanced in Kotlin/Java source files
+
+Options:
+- `--max-warns N` — allow up to N failures before exiting non-zero (useful for gradual adoption in CI)
+- `--pedantic` — strict mode: extra translation keys beyond the base are also errors
+- `--no-pytest` — skip pytest even if available; use the built-in runner
+
+It uses **pytest** when available and no special flags are set; otherwise falls back to its own standalone runner. Exit code equals the number of failed checks (standalone mode).
+
 ### Release flow (fully automatic)
 
 1. Edit `<N>.txt` with all changes for the upcoming release.

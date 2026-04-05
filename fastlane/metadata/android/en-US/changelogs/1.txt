@@ -1,3 +1,3 @@
 Initial release.
 
-- Write your changes here.
+- Added automated linter (tools/lint.py) for XML validity, language parity, and bracket balance.

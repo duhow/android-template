@@ -52,7 +52,7 @@ def _strip_code_noise(content: str) -> str:
         elif content[i] == '"':
             i += 1
             while i < n and content[i] != '"' and content[i] != '\n':
-                if content[i] == '\\':
+                if content[i] == '\\' and i + 1 < n:
                     i += 1
                 i += 1
             i += 1
@@ -60,7 +60,7 @@ def _strip_code_noise(content: str) -> str:
         elif content[i] == "'":
             i += 1
             while i < n and content[i] != "'" and content[i] != '\n':
-                if content[i] == '\\':
+                if content[i] == '\\' and i + 1 < n:
                     i += 1
                 i += 1
             i += 1

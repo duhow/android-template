@@ -22,22 +22,6 @@ Check historic commits to avoid making up new scopes every time.
 - If touching UI text, keep user-facing wording clear and consistent.
 - Avoid introducing new dependencies unless absolutely necessary.
 
-## IMPORTANT: Layout changes
-
-- `activity_main.xml` exists in **both**:
-  - `app/src/main/res/layout/activity_main.xml` (portrait/default)
-  - `app/src/main/res/layout-land/activity_main.xml` (landscape/horizontal)
-- Any layout modification to this screen **must be applied in both files**.
-- Treat portrait and landscape as a paired change to avoid regressions/crashes in horizontal mode.
-
-## Changelogs
-
-- Changelog files live in `fastlane/metadata/android/en-US/changelogs/`.
-- Each release has a dedicated numbered file (e.g. `8.txt`) matching the versionCode for that release.
-- **Edit the current numbered file** whenever you make user-facing changes (features, fixes, improvements).
-- Keep entries concise and written from the user's perspective (e.g. `- Fixed crash when tapping a reset card`).
-- Numbered files are permanent per-version snapshots — do **not** edit a file once its release tag has been created.
-
 ## Linting
 
 Run the linter as a final step before opening or merging a PR:
@@ -58,6 +42,22 @@ Options:
 - `--no-pytest` — skip pytest even if available; use the built-in runner
 
 It uses **pytest** when available and no special flags are set; otherwise falls back to its own standalone runner. Exit code equals the number of failed checks (standalone mode).
+
+## IMPORTANT: Layout changes
+
+- `activity_main.xml` exists in **both**:
+  - `app/src/main/res/layout/activity_main.xml` (portrait/default)
+  - `app/src/main/res/layout-land/activity_main.xml` (landscape/horizontal)
+- Any layout modification to this screen **must be applied in both files**.
+- Treat portrait and landscape as a paired change to avoid regressions/crashes in horizontal mode.
+
+## Changelogs
+
+- Changelog files live in `fastlane/metadata/android/en-US/changelogs/`.
+- Each release has a dedicated numbered file (e.g. `8.txt`) matching the versionCode for that release.
+- **Edit the current numbered file** whenever you make user-facing changes (features, fixes, improvements).
+- Keep entries concise and written from the user's perspective (e.g. `- Fixed crash when tapping a reset card`).
+- Numbered files are permanent per-version snapshots — do **not** edit a file once its release tag has been created.
 
 ### Release flow (fully automatic)
 

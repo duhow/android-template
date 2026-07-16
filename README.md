@@ -47,3 +47,18 @@ base64 -w 0 release.jks ; echo
 ```
 
 Then define `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_PASSWORD` (default is the same), and `ANDROID_KEY_ALIAS` as configured.
+
+### Google Play Publishing
+
+To automatically publish releases to Google Play, configure a service account JSON key.
+
+1. In [Google Play Console](https://play.google.com/console), go to **Setup → API access** and link a Google Cloud project.
+2. Create a service account with the **Release manager** (or **Releases** submitter) role.
+3. Download the JSON key file for that service account.
+4. Encode the contents and add them as a GitHub Actions secret named `GOOGLE_PLAY_JSON_KEY`:
+
+```sh
+cat google-play-key.json | base64 -w 0 ; echo
+```
+
+Requires also to update the `release.yml` Workflow and enable `BUILD_AAB` (disabled by default). The release workflow will automatically publish the AAB to the **internal** track after a successful build. The track can be changed in `fastlane/Fastfile` (`publish` lane, `track` option).

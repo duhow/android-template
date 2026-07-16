@@ -2,12 +2,14 @@ opt_out_usage # Disable metrics collection
 default_platform(:android)
 
 platform :android do
-  desc "Build APK. Accepts build_type option (default: Debug). Keystore is only used for Release builds."
+  desc "Build APK or AAB. Accepts build_type option (default: Debug) and format option (apk/aab, default: apk). Keystore is only used for Release builds."
   lane :build do |options|
     build_type = (options[:build_type] || "Debug").capitalize
+    format = (options[:format] || "apk").downcase
+    task = format == "aab" ? "bundle" : "assemble"
 
     gradle_options = {
-      task: "assemble",
+      task: task,
       build_type: build_type,
       flags: "--stacktrace",
       print_command: false,
@@ -38,5 +40,23 @@ platform :android do
         f.puts "CHANGELOG_EOF"
       end
     end
+  end
+
+  desc "Publish AAB to Google Play. Accepts track option (default: internal). Requires GOOGLE_PLAY_JSON_KEY env var."
+  lane :publish do |options|
+    track = options[:track] || "internal"
+    aab_path = Dir["app/build/outputs/bundle/release/*.aab"].first
+    UI.user_error!("AAB not found. Run 'fastlane build build_type:Release format:aab' first.") unless aab_path
+
+    supply(
+      track: track,
+      aab: aab_path,
+      json_key_data: ENV["GOOGLE_PLAY_JSON_KEY"],
+      skip_upload_apk: true,
+      skip_upload_metadata: false,
+      skip_upload_changelogs: false,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+    )
   end
 end
